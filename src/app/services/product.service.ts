@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Product } from '../model/product';
+import { Review } from '../model/review';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,15 @@ export class ProductService {
 
   getProducts(): Array<Product> {
     return products.map(p => new Product(p.id, p.title, p.price, p.rating, p.description, p.categories));
+  }
+
+  getProductById(productId: number): Product {
+    return products.find( p => p.id === productId);
+  }
+
+  getReviewsForProduct(productId: number): Review[] {
+    // tslint:disable-next-line:max-line-length
+    return reviews.filter(r => r.productId === productId).map(r => new Review(r.id, r.productId, new Date(r.timestamp), r.user, r.rating, r.comment));
   }
 }
 
@@ -74,5 +84,10 @@ const products = [
     'description': 'To jest krótki opis. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     'categories': ['books']
   }
+];
+
+const reviews = [
+  {'id' : 0, 'productId': 0, 'timestamp': '2019-01-05', 'user': 'uzytkownik 1', 'rating': 5, 'comment': 'asdn shgfd isiskdksjsj'},
+  {'id' : 1, 'productId': 0, 'timestamp': '2019-01-23', 'user': 'uzytkownik 2', 'rating': 4, 'comment': 'test comment'}
 ];
 
