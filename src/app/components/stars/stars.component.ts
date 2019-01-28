@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-stars',
@@ -6,14 +6,28 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./stars.component.css']
 })
 export class StarsComponent implements OnInit {
-  @Input() count = 5;
-  @Input() rating = 0;
-  stars: boolean[] = [];
-  constructor() { }
 
+  private _rating = 0;
+  private maxStar = 5;
+  stars: boolean[] = [];
+  @Input() readonly = true;
+  @Input() get rating() {
+    return this._rating;
+  }
+
+  set rating(value: number) {
+    this._rating = value || 0;
+    this.stars = Array(this.maxStar).fill(true, 0, this.rating);
+  }
+  constructor() { }
+@Output() ratingChange = new EventEmitter<number>();
   ngOnInit() {
-    for (let i = 0 ; i <= this.count ; i++ ) {
-      this.stars.push(i > this.rating);
+  }
+
+  fillStartsWithColor(index) {
+    if (!this.readonly) {
+      this.rating = index + 1;
+      this.ratingChange.emit(this.rating);
     }
   }
 
